@@ -21,10 +21,10 @@ function onSearch(ev) {
 
     const searchInput = document.querySelector('.location-search input[type="search"]').value
     mapService.getLocByKeyword(searchInput)
-        .then(({ location, formattedAddress }) => {
-            const marker =  mapService.addMarker(location)
-            mapService.createInfoWindow(renderWindowInfo(location, formattedAddress), marker)
-            mapService.panTo(location.lat, location.lng, 10)
+        .then(({ location:pos, formattedAddress }) => {
+            const marker =  mapService.addMarker(pos)
+            mapService.createInfoWindow(renderWindowInfo(pos, formattedAddress), marker)
+            mapService.panTo(pos, 11)
             // TODO - Open InfoWindow
             updateTitle(formattedAddress)
         })
@@ -33,9 +33,9 @@ function onSearch(ev) {
 
 function renderWindowInfo({ lat, lng }, formattedAddress) {
     return `
-        <form onsubmit="onSave(event, ${lat}, ${lng})">
+        <form onsubmit="onSave(event, ${lat}, ${lng}, this)">
             <h4>${formattedAddress}</h4>
-            <input type="text" placeholder="name" />
+            <input type="text" placeholder="Enter location nickname" />
             <button>Save</button>
         </form>
     `
@@ -82,9 +82,10 @@ function onShare() {
     
 }
 
-function onSave(ev, lat, lng) {
+function onSave(ev, lat, lng, elInput) {
     ev.preventDefault()
-    console.log('Saved');
+    console.log('Saved', 'elinput:', elInput);
+    // locService.addLoc()
 }
 
 function onDelete() {

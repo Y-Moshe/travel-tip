@@ -41,7 +41,8 @@ function loadMarkers() {
     })
 }
 
-function panTo(lat, lng, zoom = 8) {
+function panTo(pos, zoom = 12) {
+    const {lat, lng} = pos
     const laLatLng = new google.maps.LatLng(lat, lng)
     gMap.panTo(laLatLng)
     gMap.setZoom(zoom)
