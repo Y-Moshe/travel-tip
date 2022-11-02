@@ -34,7 +34,7 @@ function onSearch(ev) {
     mapService.getLocByKeyword(searchInput)
         .then(({ location: pos, formattedAddress }) => {
             const marker = mapService.addMarker(pos)
-            mapService.createInfoWindow(renderWindowInfo(pos, formattedAddress), marker)
+            mapService.createInfoWindow(renderWindowInfo(pos, formattedAddress), marker, true)
             mapService.panTo(pos, 11)
             // TODO - Open InfoWindow
             updateTitle(formattedAddress)
@@ -92,7 +92,14 @@ function renderLocation({ id, name, formattedAddress }) {
 function onGoTo(locId) {
     console.log('Panning the Map')
     locService.getLocById(locId)
-        .then(({ pos }) => mapService.panTo(pos))
+        .then(({ pos, formattedAddress }) => {
+            mapService.getMarkerByLocId(locId)
+                .then(marker => {
+                    mapService.createInfoWindow(renderWindowInfo(pos, formattedAddress), marker, true)
+                    mapService.panTo(pos)
+                })
+        })
+
 }
 
 function onShare(locId) {
