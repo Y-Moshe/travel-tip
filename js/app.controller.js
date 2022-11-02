@@ -11,12 +11,20 @@ window.onShare = onShare
 window.onGoTo = onGoTo
 
 function onInit() {
-    mapService.initMap()
-        .then(() => {
-            // console.log('Map is ready')
-            renderLocations()
+    getCurrPosition()
+        .then(({ coords }) => {
+            const { latitude, longitude } = coords
+            return { lat: latitude, lng: longitude }
         })
-        .catch(() => console.log('Error: cannot init map'))
+        .catch(() => null)
+        .then(pos => {
+            mapService.initMap(pos)
+                .then(() => {
+                    console.log('Map is ready')
+                    renderLocations()
+                })
+                .catch(() => console.log('Error: cannot init map'))
+        })
 }
 
 function onSearch(ev) {
@@ -111,8 +119,8 @@ function onSave(ev, lat, lng, elInput) {
 }
 
 function onDelete(locId) {
-    locService.deleteLoc(locId)
-        .then(() => mapService.deleteMarker(locId))
+    mapService.deleteMarker(locId)
+        .then(() => locService.deleteLoc(locId))
         .then(renderLocations)
 }
 
@@ -121,11 +129,15 @@ function onDelete(locId) {
 function onGetUserPos() {
     getCurrPosition()
         .then(({ coords }) => {
+            const { latitude, longitude } = coords
             console.log('User position is:', coords)
-            mapService.panTo(coords.latitude, coords.longitude)
+            return { lat: latitude, lng: longitude }
+        })
+        .then(pos => {
+            mapService.panTo(pos)
 
             document.querySelector('.user-pos').innerText =
-                `Latitude: ${coords.latitude} - Longitude: ${coords.longitude}`
+                `Latitude: ${pos.lat} - Longitude: ${pos.lng}`
         })
         .catch(err => {
             console.log('err!!!', err)
