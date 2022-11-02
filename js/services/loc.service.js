@@ -4,7 +4,7 @@ export const locService = {
     getLocs,
     getCurrPosition,
     addLoc,
-    removeLoc,
+    deleteLoc,
     getLocById
 }
 
@@ -12,16 +12,16 @@ const STORAGE_KEY = 'locsDB'
 
 const locs = storageService.load(STORAGE_KEY) || []
 // [
-//     { id: 'string', name: 'Greatplace', lat: 32.047104, lng: 34.832384 }, 
-//     { id: 'string', name: 'Neveragain', lat: 32.047201, lng: 34.832581 }
+//     { id: 'string', name: 'Greatplace', lat: 32.047104, lng: 34.832384, formattedAddress }, 
+//     { id: 'string', name: 'Neveragain', lat: 32.047201, lng: 34.832581, formattedAddress }
 // ]
 
-function addLoc(name, lat, lng) {
-    locs.push(_createLoc(name, lat, lng))
+function addLoc(name, lat, lng, formattedAddress) {
+    locs.push(_createLoc(name, lat, lng, formattedAddress))
     storageService.save(STORAGE_KEY, locs)
 }
 
-function removeLoc(id) {
+function deleteLoc(id) {
     const idx = locs.findIndex(loc => loc.id === id)
     locs.splice(idx, 1)
     storageService.save(STORAGE_KEY, locs)
@@ -39,8 +39,8 @@ function getLocs() {
     })
 }
 
-function _createLoc(name, lat, lng) {
-    return { id: makeId(), name, lat, lng }
+function _createLoc(name = '', lat, lng, formattedAddress) {
+    return { id: makeId(), name, lat, lng, formattedAddress }
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
