@@ -1,4 +1,5 @@
 import { storageService } from './storage.service.js'
+import { utilService } from './utils.service.js'
 
 export const locService = {
     getLocs,
@@ -42,5 +43,5 @@ function getLocs() {
 }
 
 function _createLoc(name = '', pos, formattedAddress) {
-    return { id: makeId(), name, pos, formattedAddress }
+    return { id: utilService.makeId(3), name, pos, formattedAddress }
 }

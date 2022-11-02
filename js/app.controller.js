@@ -84,8 +84,16 @@ function onShare() {
 
 function onSave(ev, lat, lng, elInput) {
     ev.preventDefault()
-    console.log('Saved', 'elinput:', elInput);
+
+    // console.log('Saved', 'elinput:', elInput);
+    // console.log('nickname', elInput.querySelector('input[type="text"]').value);
+    // console.log('formatted address', elInput.querySelector('h4').innerText);
     // locService.addLoc()
+    const name = elInput.querySelector('input[type="text"]').value
+    const formattedAddress = elInput.querySelector('h4').innerText
+    const pos = {lat, lng}
+    locService.addLoc(name, pos, formattedAddress)
+    renderLocations()
 }
 
 function onDelete() {
