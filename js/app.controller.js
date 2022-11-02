@@ -5,6 +5,7 @@ window.onload = onInit
 window.onAddMarker = onAddMarker
 window.onGetUserPos = onGetUserPos
 window.onSearch = onSearch
+window.onSave = onSave
 
 function onInit() {
     mapService.initMap()
@@ -21,12 +22,23 @@ function onSearch(ev) {
     const searchInput = document.querySelector('.location-search input[type="search"]').value
     mapService.getLocByKeyword(searchInput)
         .then(({ location, formattedAddress }) => {
-            mapService.addMarker(location)
+            const marker =  mapService.addMarker(location)
+            mapService.createInfoWindow(renderWindowInfo(location, formattedAddress), marker)
             mapService.panTo(location.lat, location.lng, 10)
             // TODO - Open InfoWindow
             updateTitle(formattedAddress)
         })
 
+}
+
+function renderWindowInfo({ lat, lng }, formattedAddress) {
+    return `
+        <form onsubmit="onSave(event, ${lat}, ${lng})">
+            <h4>${formattedAddress}</h4>
+            <input type="text" placeholder="name" />
+            <button>Save</button>
+        </form>
+    `
 }
 
 function updateTitle(txt) {
@@ -68,6 +80,11 @@ function onGoTo(locationId) {
 
 function onShare() {
     
+}
+
+function onSave(ev, lat, lng) {
+    ev.preventDefault()
+    console.log('Saved');
 }
 
 function onDelete() {

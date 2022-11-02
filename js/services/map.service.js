@@ -5,7 +5,8 @@ export const mapService = {
     panTo,
     addMarker,
     deleteMarker,
-    getLocByKeyword
+    getLocByKeyword,
+    createInfoWindow
 }
 
 // let that is used throughout this Module (not global)
@@ -40,9 +41,19 @@ function loadMarkers() {
     })
 }
 
-// locId = refers to location object id
-function _createMarker(marker, locId) {
-    return { id: makeId(), marker, locId }
+function panTo(lat, lng, zoom = 8) {
+    const laLatLng = new google.maps.LatLng(lat, lng)
+    gMap.panTo(laLatLng)
+    gMap.setZoom(zoom)
+}
+
+function createInfoWindow(windowHtml, marker) {
+    const window = new google.maps.InfoWindow({
+        content: windowHtml
+    })
+
+    marker.addListener('click',
+        () => window.open({ anchor: marker, gMap }))
 }
 
 function addMarker(pos, name = '', locId = null) {
@@ -66,10 +77,9 @@ function deleteMarker(locId) {
     return Promise.resolve(deletedMarker)
 }
 
-function panTo(lat, lng, zoom = 8) {
-    const laLatLng = new google.maps.LatLng(lat, lng)
-    gMap.panTo(laLatLng)
-    gMap.setZoom(zoom)
+// locId = refers to location object id
+function _createMarker(marker, locId) {
+    return { id: makeId(), marker, locId }
 }
 
 function getLocByKeyword(keyword) {
