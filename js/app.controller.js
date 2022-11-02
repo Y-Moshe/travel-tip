@@ -8,6 +8,7 @@ window.onSearch = onSearch
 window.onSave = onSave
 window.onDelete = onDelete
 window.onShare = onShare
+window.onGoTo = onGoTo
 
 function onInit() {
     mapService.initMap()
@@ -72,7 +73,7 @@ function renderLocation({ id, name, formattedAddress }) {
             </div>
 
             <div class="location-actions">
-                <button class="btn-go" onclick="onPanTo('${id}')">GO</button>
+                <button class="btn-go" onclick="onGoTo('${id}')">GO</button>
                 <button class="btn-share" onclick="onShare('${id}')">Share</button>
                 <button class="btn-delete" onclick="onDelete('${id}')">Delete</button>
             </div>
@@ -82,11 +83,18 @@ function renderLocation({ id, name, formattedAddress }) {
 
 function onGoTo(locId) {
     console.log('Panning the Map')
-    mapService.panTo(lat, lng)
+    locService.getLocById(locId)
+        .then(({ pos }) => mapService.panTo(pos))
 }
 
 function onShare(locId) {
-
+    locService.getLocById(locId)
+        .then(({ pos }) =>
+            window.location.href + `?lat=${pos.lat}&lng=${pos.lng}`)
+        .then(url => {
+            navigator.clipboard.writeText(url)
+                .then(() => console.log('Copid'))
+        })
 }
 
 function onSave(ev, lat, lng, elInput) {
@@ -96,13 +104,16 @@ function onSave(ev, lat, lng, elInput) {
     const formattedAddress = elInput.querySelector('h4').innerText
     const pos = { lat, lng }
     locService.addLoc(name, pos, formattedAddress)
-    renderLocations()
+        .then(({ id: locId }) => {
+            mapService.addMarker(pos, name, locId)
+            renderLocations()
+        })
 }
 
 function onDelete(locId) {
     locService.deleteLoc(locId)
-        .then( () =>
-            mapService.deleteMarker(locId))    
+        .then(() => mapService.deleteMarker(locId))
+        .then(renderLocations)
 }
 
 //     { id, name, pos, formattedAddress }, 
