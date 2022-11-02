@@ -1,19 +1,18 @@
 import { locService } from './loc.service.js'
+import { API_KEY } from '../../secret.js';
 export const mapService = {
     initMap,
     panTo,
     addMarker,
-    removeMarker,
+    deleteMarker,
     getLocByKeyword
 }
 
-const API_KEY = 'AIzaSyBL3ZxetNDgUPAs_yW57YL8pXknqKOfo7k'
-
-// Var that is used throughout this Module (not global)
-var gMap
-var gMarkers = []
+// let that is used throughout this Module (not global)
+let gMap
+let gMarkers = []
 // [
-//     { id, marker }
+//     { id, marker, locId }
 // ]
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
@@ -32,33 +31,42 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 }
 
 function loadMarkers() {
-    locService.getLocs()
+    return locService.getLocs()
         .then(locs => {
-        locs.forEach(({ id, name, lat, lng }) => {
-            const pos = { lat, lng }
-            gMarkers.push({ id, marker: addMarker(pos, name) })
+        locs.forEach(({ id: locId, name, pos }) => {
+            const marker = addMarker(pos, name)
+            gMarkers.push(_createMarker(marker, locId))
         })
     })
 }
 
+// locId = refers to location object id
+function _createMarker(marker, locId) {
+    return { id: makeId(), marker, locId }
+}
+
 function addMarker(pos, name) {
-    var marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
         position: pos,
         map: gMap,
         title: name
     })
+
+    initMap()
     return marker
 }
 
-function removeMarker(id) {
-    const idx = gMarkers.findIndex(marker => marker.id === id)
-    const mark = gMarkers[idx].marker
-    mark.setVisible(false)
-    gMarkers.splice(idx, 1)[0]
+function deleteMarker(locId) {
+    const idx = gMarkers.findIndex(marker => marker.locId === locId)
+    if (idx === -1) return Promise.reject('Marker not found')
+
+    const deletedMarker = gMarkers.splice(idx, 1)[0]
+    initMap()
+    return Promise.resolve(deletedMarker)
 }
 
 function panTo(lat, lng, zoom = 8) {
-    var laLatLng = new google.maps.LatLng(lat, lng)
+    const laLatLng = new google.maps.LatLng(lat, lng)
     gMap.panTo(laLatLng)
     gMap.setZoom(zoom)
 }
@@ -78,7 +86,7 @@ function getLocByKeyword(keyword) {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    var elGoogleApi = document.createElement('script')
+    let elGoogleApi = document.createElement('script')
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
     elGoogleApi.async = true
     document.body.append(elGoogleApi)
