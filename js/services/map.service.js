@@ -7,7 +7,8 @@ export const mapService = {
     addMarker,
     deleteMarker,
     getLocByKeyword,
-    createInfoWindow
+    createInfoWindow,
+    getMarkerByLocId
 }
 
 // let that is used throughout this Module (not global)
@@ -50,13 +51,18 @@ function panTo(pos, zoom = 12) {
     gMap.setZoom(zoom)
 }
 
-function createInfoWindow(windowHtml, marker) {
+function createInfoWindow(windowHtml, marker, isOpen = false) {
     const window = new google.maps.InfoWindow({
         content: windowHtml
     })
+    const openWindow = () => window.open({ anchor: marker, map: gMap })
+    
+    if (isOpen) openWindow()
+    marker.addListener('click', openWindow)
+}
 
-    marker.addListener('click',
-        () => window.open({ anchor: marker, gMap }))
+function getMarkerByLocId(locId) {
+    return Promise.resolve(gMarkers.find(marker => marker.locId === locId).marker)
 }
 
 function addMarker(pos, name = '', locId = null) {
