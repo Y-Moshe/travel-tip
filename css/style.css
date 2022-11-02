@@ -1,8 +1,7 @@
 :root {
     /* pallet */
     --clr1: #626262;
-    
-   
+    --clr2: rgb(26,115,232);
 }
 
 * {
@@ -11,12 +10,16 @@
 
 /* TYPOGRAPHY */
 
-/* @font-face {
-    font-family: ;
-    src: ;
-} */
+@font-face {
+    font-family: Roboto;
+    src: url(../fonts/Roboto/Roboto-Regular.ttf);
+}
 
 /* BASICS  */
+
+html {
+    font-family: Roboto, sans-serif;
+}
 
 body {
     margin: 0;    
@@ -32,6 +35,7 @@ main {
     display: grid;
     grid-template-rows: 2fr 1fr;
     grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
 
 main .weather {
@@ -46,23 +50,99 @@ main .map {
 
 
 /* header  */
+
+header .main-header {
+    background-color: var(--clr2);
+    color: white;
+}
+
+header .main-header h1 {
+    margin: 0;
+    padding: 25px;
+}
+
+/* search-bar */
+
 header .search-bar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 4fr 1.5fr;
     align-items: center;
 }
 
-header .search-bar .location-search {
-    grid-column: -2/-3;
+header .search-bar .location-search {}
+
+.search-bar .location-search input {
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--clr2);
+    transition: .3s;
 }
 
-header .search-bar .btn-my-location {
-    grid-column: -1/-2;
+.search-bar .location-search input:hover {
+    border: 1px solid var(--clr2);
+}
+
+.search-bar .location-search input:focus {
+    outline: none;
 }
 
 /* COMPONENTS */
 
+.saved-locations {
+    padding: 5px;
+    background-color: rgb(241,243,244);
+}
 
+.saved-locations .location-card {
+    margin: 3px;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 5px;
+    padding: 2px;
+}
+
+.saved-locations .location-card:hover {
+    background: rgba(60,64,67,0.04);
+}
+
+.saved-locations .location-card h3 {
+    margin-top: 0;
+}
+
+.location-card .location-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.location-card .location-actions button {
+    width: 50%;
+    border: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 3px;
+    transition: box-shadow .3s;
+    box-shadow: 0 0 3px var(--clr1);
+}
+
+.location-card .location-actions button:hover {
+    box-shadow: 0 0 3px var(--clr2);
+
+}
+
+.btn-go {
+}
+
+.btn-share {
+}
+
+.btn-delete {
+}
 
 /* RESPONSIVITY */
 

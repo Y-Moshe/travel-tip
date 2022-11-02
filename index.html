@@ -16,21 +16,26 @@
             <form class="location-search" onsubmit="onSearch(event)">
                 <input type="search" name="searchInput" placeholder="Enter a location">
                 <button>GO</button>
+                <button type="button" class="btn-my-location" onclick="onGetUserPos()">
+                    My location
+                </button>
             </form>
-            <button class="btn-my-location" onclick="onGetUserPos()">
-                My location
-            </button>
         </div>
     </header>
 
     <main>
         <section class="saved-locations">
             <article class="location-card">
-                <h3>Location Title</h3>
-                <h5>Location desc</h5>
-                <button class="btn-go" onclick="onPanTo(this)" data-id="123">GO</button>
-                <button class="btn-share" onclick="onShare(this)" data-id="123">Share</button>
-                <button class="btn-delete" onclick="onDelete(this)" data-id="123">Delete</button>
+                <div>
+                    <h3>Location Title</h3>
+                    <p>Location desc</p>
+                </div>
+
+                <div class="location-actions">
+                    <button class="btn-go" onclick="onPanTo(this)">GO</button>
+                    <button class="btn-share" onclick="onShare(this)">Share</button>
+                    <button class="btn-delete" onclick="onDelete(this)">Delete</button>
+                </div>
             </article>
 
         </section>
