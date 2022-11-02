@@ -1,5 +1,6 @@
 import { locService } from './loc.service.js'
 import { API_KEY } from '../../secret.js';
+import { utilService } from './utils.service.js';
 export const mapService = {
     initMap,
     panTo,
@@ -17,17 +18,17 @@ let gMarkers = []
 // ]
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-    console.log('InitMap')
+    // console.log('InitMap')
     return _connectGoogleApi()
         .then(() => {
-            console.log('google available')
+            // console.log('google available')
             gMap = new google.maps.Map(
                 document.querySelector('.map'), {
                 center: { lat, lng },
                 zoom: 15
             })
             loadMarkers()
-            console.log('Map!', gMap)
+            // console.log('Map!', gMap)
         })
 }
 
@@ -74,13 +75,15 @@ function deleteMarker(locId) {
     if (idx === -1) return Promise.reject('Marker not found')
 
     const deletedMarker = gMarkers.splice(idx, 1)[0]
+    console.log('deleted marker', deletedMarker);
     initMap()
+    // initMap(deletedMarker.marker.pos)
     return Promise.resolve(deletedMarker)
 }
 
 // locId = refers to location object id
 function _createMarker(marker, locId) {
-    return { id: makeId(), marker, locId }
+    return { id: utilService.makeId(3), marker, locId }
 }
 
 function getLocByKeyword(keyword) {
