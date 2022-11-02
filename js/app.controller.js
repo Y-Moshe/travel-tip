@@ -6,11 +6,13 @@ window.onAddMarker = onAddMarker
 window.onGetUserPos = onGetUserPos
 window.onSearch = onSearch
 window.onSave = onSave
+window.onDelete = onDelete
+window.onShare = onShare
 
 function onInit() {
     mapService.initMap()
         .then(() => {
-            console.log('Map is ready')
+            // console.log('Map is ready')
             renderLocations()
         })
         .catch(() => console.log('Error: cannot init map'))
@@ -21,8 +23,8 @@ function onSearch(ev) {
 
     const searchInput = document.querySelector('.location-search input[type="search"]').value
     mapService.getLocByKeyword(searchInput)
-        .then(({ location:pos, formattedAddress }) => {
-            const marker =  mapService.addMarker(pos)
+        .then(({ location: pos, formattedAddress }) => {
+            const marker = mapService.addMarker(pos)
             mapService.createInfoWindow(renderWindowInfo(pos, formattedAddress), marker)
             mapService.panTo(pos, 11)
             // TODO - Open InfoWindow
@@ -54,7 +56,7 @@ function renderLocations() {
     locService.getLocs()
         .then(locs => {
             const strLocs = locs.map(renderLocation).join('')
-            console.log('Locations:', locs)
+            // console.log('Locations:', locs)
 
             document.querySelector('.saved-locations')
                 .innerHTML = strLocs
@@ -78,32 +80,32 @@ function renderLocation({ id, name, formattedAddress }) {
     `
 }
 
-function onGoTo(locationId) {
+function onGoTo(locId) {
     console.log('Panning the Map')
     mapService.panTo(lat, lng)
 }
 
-function onShare() {
-    
+function onShare(locId) {
+
 }
 
 function onSave(ev, lat, lng, elInput) {
     ev.preventDefault()
 
-    // console.log('Saved', 'elinput:', elInput);
-    // console.log('nickname', elInput.querySelector('input[type="text"]').value);
-    // console.log('formatted address', elInput.querySelector('h4').innerText);
-    // locService.addLoc()
     const name = elInput.querySelector('input[type="text"]').value
     const formattedAddress = elInput.querySelector('h4').innerText
-    const pos = {lat, lng}
+    const pos = { lat, lng }
     locService.addLoc(name, pos, formattedAddress)
     renderLocations()
 }
 
-function onDelete() {
-
+function onDelete(locId) {
+    locService.deleteLoc(locId)
+        .then( () =>
+            mapService.deleteMarker(locId))    
 }
+
+//     { id, name, pos, formattedAddress }, 
 
 function onGetUserPos() {
     getCurrPosition()
