@@ -14,7 +14,7 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
         .then(() => {
             console.log('google available')
             gMap = new google.maps.Map(
-                document.querySelector('#map'), {
+                document.querySelector('.map'), {
                 center: { lat, lng },
                 zoom: 15
             })
@@ -39,7 +39,7 @@ function panTo(lat, lng) {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = '' //TODO: Enter your API Key
+    const API_KEY = 'AIzaSyBL3ZxetNDgUPAs_yW57YL8pXknqKOfo7k' 
     var elGoogleApi = document.createElement('script')
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
     elGoogleApi.async = true
