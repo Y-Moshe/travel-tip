@@ -73,7 +73,7 @@ function panTo(lat, lng, zoom = 8) {
 
 function getLocByKeyword(keyword) {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${keyword}&key=${API_KEY}`
-    fetch(url)
+    return fetch(url)
         .then(res => res.json())
         .then(({ results }) => {
             const { geometry, formatted_address } = results
