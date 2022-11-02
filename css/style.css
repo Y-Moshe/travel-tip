@@ -18,22 +18,45 @@
 
 /* BASICS  */
 
+body {
+    margin: 0;    
+}
+
 /* HELPERS */
 
 /* LAYOUT */
 
+/* main  */
+
+main {
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+main .weather {
+    grid-row: 2;
+}
+
+main .map {
+    grid-column: 2/4;
+    grid-row: 1/3;
+    height: 600px;
+}
+
+
 /* header  */
-.header .search-bar {
+header .search-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
 }
 
-.header .search-bar .location-search {
+header .search-bar .location-search {
     grid-column: -2/-3;
 }
 
-.header .search-bar .btn-my-location {
+header .search-bar .btn-my-location {
     grid-column: -1/-2;
 }
 
