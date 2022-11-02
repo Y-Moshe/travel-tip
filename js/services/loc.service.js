@@ -1,5 +1,6 @@
 export const locService = {
-    getLocs
+    getLocs,
+    getCurrPosition
 }
 
 const locs = [
@@ -15,4 +16,10 @@ function getLocs() {
     })
 }
 
-
+// This function provides a Promise API to the callback-based-api of getCurrentPosition
+function getCurrPosition() {
+    console.log('Getting Pos')
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
+}

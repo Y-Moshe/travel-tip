@@ -31,15 +31,15 @@ function addMarker(loc) {
     return marker
 }
 
-function panTo(lat, lng) {
+function panTo(lat, lng, zoom = 8) {
     var laLatLng = new google.maps.LatLng(lat, lng)
     gMap.panTo(laLatLng)
+    gMap.setZoom(zoom)
 }
-
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = 'AIzaSyBL3ZxetNDgUPAs_yW57YL8pXknqKOfo7k' 
+    const API_KEY = 'AIzaSyBL3ZxetNDgUPAs_yW57YL8pXknqKOfo7k'
     var elGoogleApi = document.createElement('script')
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
     elGoogleApi.async = true
