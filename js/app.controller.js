@@ -17,6 +17,7 @@ function onInit() {
             return { lat: latitude, lng: longitude }
         })
         .catch(() => null)
+        .then(mapFromQueryParams)
         .then(pos => {
             mapService.initMap(pos)
                 .then(() => {
@@ -25,6 +26,14 @@ function onInit() {
                 })
                 .catch(() => console.log('Error: cannot init map'))
         })
+}
+
+function mapFromQueryParams() {
+    const params = new URLSearchParams(window.location.search)
+    return {
+        lat: +params.get('lat') || 0,
+        lng: +params.get('lng') || 0
+    }
 }
 
 function onSearch(ev) {
@@ -108,7 +117,8 @@ function onShare(locId) {
             window.location.href + `?lat=${pos.lat}&lng=${pos.lng}`)
         .then(url => {
             navigator.clipboard.writeText(url)
-                .then(() => console.log('Copid'))
+                .then(() => Swal.fire('Clipboard','URL Copied to clipboard', 'success'))
+                
         })
 }
 
@@ -126,9 +136,22 @@ function onSave(ev, lat, lng, elInput) {
 }
 
 function onDelete(locId) {
-    mapService.deleteMarker(locId)
-        .then(() => locService.deleteLoc(locId))
-        .then(renderLocations)
+    Swal.fire({
+        title: 'Delete',
+        text: "Are you sure?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+    }).then(result => result.isConfirmed)
+        .then(isConfirmed => {
+            if (!isConfirmed) return
+            
+            mapService.deleteMarker(locId)
+                .then(() => locService.deleteLoc(locId))
+                .then(renderLocations)
+        })
 }
 
 //     { id, name, pos, formattedAddress }, 
