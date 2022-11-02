@@ -17,8 +17,10 @@ const locs = storageService.load(STORAGE_KEY) || []
 // ]
 
 function addLoc(name, pos, formattedAddress) {
-    locs.push(_createLoc(name, pos, formattedAddress))
+    const loc = _createLoc(name, pos, formattedAddress)
+    locs.push(loc)
     storageService.save(STORAGE_KEY, locs)
+    return Promise.resolve(loc)
 }
 
 function deleteLoc(id) {
