@@ -64,11 +64,16 @@ function renderLocations() {
 function renderLocation({ id, name, formattedAddress }) {
     return `
         <article class="location-card">
-            <h3>${name}</h3>
-            <h5>${formattedAddress}</h5>
-            <button class="btn-go" onclick="onGoTo('${id}')">GO</button>
-            <button class="btn-share" onclick="onShare('${id}')">Share</button>
-            <button class="btn-delete" onclick="onDelete('${id}')">Delete</button>
+            <div>
+                <h3>${name}</h3>
+                <p>${formattedAddress}</p>
+            </div>
+
+            <div class="location-actions">
+                <button class="btn-go" onclick="onPanTo('${id}')">GO</button>
+                <button class="btn-share" onclick="onShare('${id}')">Share</button>
+                <button class="btn-delete" onclick="onDelete('${id}')">Delete</button>
+            </div>
         </article>
     `
 }
