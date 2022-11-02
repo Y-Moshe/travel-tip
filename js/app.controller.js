@@ -21,8 +21,9 @@ function onSearch(ev) {
     const searchInput = document.querySelector('.location-search input[type="search"]').value
     mapService.getLocByKeyword(searchInput)
         .then(({ location, formattedAddress }) => {
+            mapService.addMarker(location)
             mapService.panTo(location.lat, location.lng, 10)
-            // TODO open InfoWindow
+            // TODO - Open InfoWindow
             updateTitle(formattedAddress)
         })
 

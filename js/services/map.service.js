@@ -45,14 +45,15 @@ function _createMarker(marker, locId) {
     return { id: makeId(), marker, locId }
 }
 
-function addMarker(pos, name) {
+function addMarker(pos, name = '', locId = null) {
     let marker = new google.maps.Marker({
         position: pos,
         map: gMap,
         title: name
     })
 
-    initMap()
+    if (locId) gMarkers.push(_createMarker(marker, locId))
+
     return marker
 }
 
@@ -76,7 +77,7 @@ function getLocByKeyword(keyword) {
     return fetch(url)
         .then(res => res.json())
         .then(({ results }) => {
-            const { geometry, formatted_address } = results
+            const { geometry, formatted_address } = results[0]
             return {
                 formattedAddress: formatted_address,
                 location: geometry.location
